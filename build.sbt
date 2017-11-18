@@ -8,5 +8,6 @@ lazy val root = (project in file("."))
 libraryDependencies ++= Seq(
   "com.github.scopt" %% "scopt" % "3.7.0",
   "com.typesafe" % "config" % "1.3.1",
-  "org.apache.httpcomponents" % "httpclient" % "4.5.3"
+  "org.apache.httpcomponents" % "httpclient" % "4.5.3",
+  "org.scala-lang.modules" %% "scala-xml" % "1.0.6"
 )

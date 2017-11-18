@@ -2,21 +2,20 @@ package org.matruss.labyrinth
 
 import scala.util.{Failure, Success, Try}
 import com.typesafe.config.ConfigFactory
-import org.apache.http.impl.client.CloseableHttpClient
 import scopt.OptionParser
-
 import org.matruss.labyrinth.config.LabyrinthConfiguration
 import org.matruss.labyrinth.Labyrinth.LabyrinthParams
+import org.matruss.labyrinth.harvest.WebHarvester
 
 class Labyrinth(cfg:LabyrinthConfiguration) {
 
   // def validate:Boolean = true
-  def init:CloseableHttpClient =
-    HTTPConnectionService(cfg.httpSettings).client
+  def init:WebHarvester = WebHarvester(cfg.httpSettings)
 
-  def run(startUrl:String, service:CloseableHttpClient):ExitStatus = {
-    ???
-    service.close()
+  def run(startUrl:String, service:WebHarvester):ExitStatus = {
+
+    val client = service.client
+    client.close()
     Successful
   }
 
