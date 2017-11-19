@@ -23,8 +23,9 @@ class WebHarvester(cfg:HTTP) {
     val request = new HttpGet(url)
     val response = client.execute(request)
     response.getStatusLine.getStatusCode match {
-      case code if code != GoodResponse => {
+      case code if code == GoodResponse => {
         EntityUtils.toString( response.getEntity, Encoding )
+        ???
       }
       case error =>
         WebResponse(Seq.empty[String], error, response.getStatusLine.getReasonPhrase )
