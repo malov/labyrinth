@@ -1,10 +1,11 @@
 package org.matruss.labyrinth.harvest
 
+import java.net.{URL,URI}
+
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.{CloseableHttpClient, HttpClients}
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager
 import org.apache.http.util.EntityUtils
-
 import org.matruss.labyrinth.config.HTTP
 import org.matruss.labyrinth.harvest.WebHarvester.WebResponse
 
@@ -18,10 +19,21 @@ class WebHarvester(cfg:HTTP) {
   private[this] lazy val client:CloseableHttpClient =
     HttpClients.custom().setConnectionManager(cm).build()
 
+  /*private[harvest] def createURI(base:String, link:String):URI = {
+    val protocol = (base.split(":"), link.split(":") ) match {
+      case (Nil,Nil) => "http"
+      case (x, Nil) => x.head
+      case (Nil,y) => y.head
+      case (x,y) => y.head
+      case _ => "http"
+    }
+  }*/
+
   def fetch(url:String):WebResponse = {
     import WebHarvester.{Encoding, GoodResponse}
 
-    val request = new HttpGet(url)
+    // val uri = createURI(url)
+    val request = new HttpGet( url )
     val response = client.execute(request)
     response.getStatusLine.getStatusCode match {
       case code if code == GoodResponse => {

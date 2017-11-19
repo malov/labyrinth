@@ -1,8 +1,8 @@
 package org.matruss.labyrinth.harvest
 
-
 import scala.util.{Failure, Success, Try}
 import scala.xml.XML
+
 import org.matruss.labyrinth.harvest.Bag.Tag
 
 class Bag(private val content:String) {
