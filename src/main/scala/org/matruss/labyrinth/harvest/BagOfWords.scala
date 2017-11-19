@@ -1,7 +1,7 @@
 package org.matruss.labyrinth.harvest
 
-import scala.util.{Failure, Success, Try}
 import scala.xml.XML
+import scala.util.{Failure, Success, Try}
 
 import org.matruss.labyrinth.harvest.BagOfWords.Tag
 

@@ -11,12 +11,22 @@ class WebHarvestSpec extends FreeSpec with Matchers {
   private val conf = LabyrinthConfiguration( ConfigFactory.load("application.test.conf") )
 
   "WebHarvester" - {
-    "should fetch links from the valid web page" ignore {
-      val harvester = WebHarvester( conf.httpSettings )
-      val response = harvester.fetch("www.google.com")
-
-      response.links.size shouldEqual 0   // todo page is not a valida XML, will fix it later
+    val harvester = WebHarvester( conf.httpSettings )
+    "should fetch links from the valid web page" in {
+      val response = harvester.fetch("http://www.google.com")
       response.responseCode shouldEqual 200
+    }
+    "should add protocol to URL if necessary" in {
+      val uri = harvester.createURI("www.google.com","")
+      uri.toString shouldEqual "http://www.google.com"
+    }
+    "should keep protocol of URL if supplied" in {
+      val uri = harvester.createURI("https://www.google.com","")
+      uri.toString shouldEqual "https://www.google.com"
+    }
+    "should build correct relative URI" in {
+      val uri = harvester.createURI("http://www.google.com","/policy")
+      uri.toString shouldEqual "http://www.google.com/policy"
     }
   }
 }

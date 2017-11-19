@@ -1,11 +1,13 @@
 package org.matruss.labyrinth.harvest
 
-import java.net.{URL,URI}
+import java.net.{URI, URL}
+import scala.util.{Failure, Success, Try}
 
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.{CloseableHttpClient, HttpClients}
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager
 import org.apache.http.util.EntityUtils
+
 import org.matruss.labyrinth.config.HTTP
 import org.matruss.labyrinth.harvest.WebHarvester.WebResponse
 
@@ -19,32 +21,39 @@ class WebHarvester(cfg:HTTP) {
   private[this] lazy val client:CloseableHttpClient =
     HttpClients.custom().setConnectionManager(cm).build()
 
-  /*private[harvest] def createURI(base:String, link:String):URI = {
-    val protocol = (base.split(":"), link.split(":") ) match {
-      case (Nil,Nil) => "http"
-      case (x, Nil) => x.head
-      case (Nil,y) => y.head
-      case (x,y) => y.head
-      case _ => "http"
+  private[harvest] def createURI(base:String, relativePath:String):URI = {
+    def addProtocol(url:String):String = {
+      if(url.split("http:|https:").length > 1) url
+      else s"http://${url}"
     }
-  }*/
 
-  def fetch(url:String):WebResponse = {
+    if(relativePath.isEmpty) (new URL( addProtocol(base) )).toURI
+    else {
+      new URL( new URL( addProtocol(base) ), relativePath).toURI
+    }
+  }
+
+  def fetch(base:String, path:String = ""):WebResponse = {
     import WebHarvester.{Encoding, GoodResponse}
 
-    // val uri = createURI(url)
-    val request = new HttpGet( url )
-    val response = client.execute(request)
-    response.getStatusLine.getStatusCode match {
-      case code if code == GoodResponse => {
-        WebResponse(
-          BagOfWords( EntityUtils.toString( response.getEntity, Encoding ) ).extract,
-          code,
-          response.getStatusLine.getReasonPhrase
-        )
+    Try {
+      val request = new HttpGet( createURI( base, path) )
+      val response = client.execute(request)
+      response.getStatusLine.getStatusCode match {
+        case code if code == GoodResponse => {
+          WebResponse(
+            BagOfWords( EntityUtils.toString( response.getEntity, Encoding ) ).extract,
+            code,
+            response.getStatusLine.getReasonPhrase
+          )
+        }
+        case error =>
+          WebResponse(Seq.empty[String], error, response.getStatusLine.getReasonPhrase )
       }
-      case error =>
-        WebResponse(Seq.empty[String], error, response.getStatusLine.getReasonPhrase )
+    }
+    match {
+      case Success(resp) => resp
+      case Failure(error) => WebResponse(Seq.empty[String], 1, error.getMessage )
     }
   }
 
