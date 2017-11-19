@@ -14,11 +14,11 @@ class BagOfWordsSpec extends FreeSpec with Matchers {
   "Bag of Words class" - {
     "should parse valid html" in {
       val source = Source.fromFile("src/test/resources/sample.html").getLines.toStream
-      Try { BagOfWords( source.mkString ) } shouldBe a [Success[BagOfWords]]
+      Try { BagOfWords( source.mkString ) } shouldBe a [Success[_]]
     }
     "should extract links from valid XML page" in {
       val source = Source.fromFile("src/test/resources/sample.html").getLines.toStream
-      Try { XML.loadString( source.mkString ) } shouldBe a [Success[String]]
+      Try { XML.loadString( source.mkString ) } shouldBe a [Success[_]]
 
       val bag = BagOfWords( source.mkString )
       bag.extract.size shouldEqual 2
@@ -26,6 +26,10 @@ class BagOfWordsSpec extends FreeSpec with Matchers {
     "should still extract links from invalid XML page" in {
       val source = Source.fromFile("src/test/resources/monzo.html").getLines.toStream
       Try { XML.loadString( source.mkString ) } shouldBe a [Failure[_]]
+
+      val bag = BagOfWords( source.mkString )
+      val links = bag.extract
+      links.size shouldEqual 24
     }
   }
 }
