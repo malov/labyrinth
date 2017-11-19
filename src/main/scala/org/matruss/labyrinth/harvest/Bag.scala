@@ -8,18 +8,16 @@ import org.matruss.labyrinth.harvest.Bag.Tag
 class Bag(private val content:String) {
 
   def extract:Iterable[String] = {
-    Try {
+    def extractAsXML:Iterable[String] = {
       val page = XML.loadString(content)
-      val attributes = page  \\ Tag.Anchor flatMap { node =>
-        node.attribute(Tag.Link)
-      }
-      attributes.map(_.toString)
+      page  \\ Tag.Anchor flatMap { _.attribute(Tag.Link) } map { _.toString }
     }
+    def extractAsPattern:Iterable[String] = ???
+
+    Try { extractAsXML }
     match {
       case Success(seq) => seq
-      case Failure(e) =>
-        val x = e
-        Seq.empty[String] // todo log errors as well
+      case Failure(_) => { extractAsPattern }
     }
   }
 }
