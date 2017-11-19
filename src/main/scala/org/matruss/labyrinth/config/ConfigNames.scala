@@ -10,7 +10,7 @@ object ConfigNames {
     val Setting = "setting"
   }
   object HTTP {
-    val MaxTotal = "total-max"
+    val MaxTotal = "total-overall"
     val MaxPerRoute = "total-route"
   }
   object Site {

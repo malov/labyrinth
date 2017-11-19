@@ -14,8 +14,7 @@ class Labyrinth(cfg:LabyrinthConfiguration) {
 
   def run(startUrl:String, service:WebHarvester):ExitStatus = {
 
-    val client = service.client
-    client.close()
+    service.close()
     Successful
   }
 

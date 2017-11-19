@@ -4,8 +4,8 @@ import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.{CloseableHttpClient, HttpClients}
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager
 import org.apache.http.util.EntityUtils
-import org.matruss.labyrinth.config.HTTP
 
+import org.matruss.labyrinth.config.HTTP
 import org.matruss.labyrinth.harvest.WebHarvester.WebResponse
 
 class WebHarvester(cfg:HTTP) {
@@ -15,7 +15,8 @@ class WebHarvester(cfg:HTTP) {
     res.setDefaultMaxPerRoute(cfg.totalRoute)
     res
   }
-  lazy val client:CloseableHttpClient = HttpClients.custom().setConnectionManager(cm).build()
+  private[this] lazy val client:CloseableHttpClient =
+    HttpClients.custom().setConnectionManager(cm).build()
 
   def fetch(url:String):WebResponse = {
     import WebHarvester.{Encoding, GoodResponse}
@@ -24,13 +25,18 @@ class WebHarvester(cfg:HTTP) {
     val response = client.execute(request)
     response.getStatusLine.getStatusCode match {
       case code if code == GoodResponse => {
-        EntityUtils.toString( response.getEntity, Encoding )
-        ???
+        WebResponse(
+          Bag( EntityUtils.toString( response.getEntity, Encoding ) ).extract,
+          code,
+          response.getStatusLine.getReasonPhrase
+        )
       }
       case error =>
         WebResponse(Seq.empty[String], error, response.getStatusLine.getReasonPhrase )
     }
   }
+
+  def close():Unit = client.close()
 }
 
 object WebHarvester {

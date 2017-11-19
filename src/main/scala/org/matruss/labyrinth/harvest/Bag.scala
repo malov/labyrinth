@@ -12,7 +12,7 @@ class Bag(private val content:String) {
       val page = XML.loadString(content)
       page  \\ Tag.Anchor flatMap { _.attribute(Tag.Link) } map { _.toString }
     }
-    def extractAsPattern:Iterable[String] = ???
+    def extractAsPattern:Iterable[String] = Seq.empty[String] // todo not implemented yet
 
     Try { extractAsXML }
     match {
