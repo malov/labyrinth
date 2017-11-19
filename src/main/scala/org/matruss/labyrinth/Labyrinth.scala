@@ -6,7 +6,7 @@ import scopt.OptionParser
 import org.matruss.labyrinth.config.LabyrinthConfiguration
 import org.matruss.labyrinth.Labyrinth.LabyrinthParams
 import org.matruss.labyrinth.harvest.WebHarvester
-import org.matruss.labyrinth.model.Page
+import org.matruss.labyrinth.model.WebPage
 
 class Labyrinth(cfg:LabyrinthConfiguration) {
 
@@ -14,7 +14,7 @@ class Labyrinth(cfg:LabyrinthConfiguration) {
   def init:WebHarvester = WebHarvester(cfg.httpSettings)
 
   def run(startUrl:String, service:WebHarvester):ExitStatus = {
-    Page( cfg.site, startUrl, service).toXml
+    WebPage( cfg.site, startUrl, service).toXml
 
     service.close()
 

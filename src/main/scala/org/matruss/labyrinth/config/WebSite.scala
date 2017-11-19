@@ -2,11 +2,11 @@ package org.matruss.labyrinth.config
 
 import com.typesafe.config.Config
 
-case class Site(setting:String)
+case class WebSite(setting:String)
 
-object Site {
+object WebSite {
 
-  def apply(cfg:Config):Site = Site(
+  def apply(cfg:Config):WebSite = WebSite(
     setting = cfg.getString(ConfigNames.Site.Setting)
   )
 }

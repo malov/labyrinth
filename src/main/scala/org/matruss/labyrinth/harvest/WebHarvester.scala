@@ -38,7 +38,7 @@ class WebHarvester(cfg:HTTP) {
     response.getStatusLine.getStatusCode match {
       case code if code == GoodResponse => {
         WebResponse(
-          Bag( EntityUtils.toString( response.getEntity, Encoding ) ).extract,
+          BagOfWords( EntityUtils.toString( response.getEntity, Encoding ) ).extract,
           code,
           response.getStatusLine.getReasonPhrase
         )

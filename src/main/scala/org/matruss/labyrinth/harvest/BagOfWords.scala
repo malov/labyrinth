@@ -3,9 +3,9 @@ package org.matruss.labyrinth.harvest
 import scala.util.{Failure, Success, Try}
 import scala.xml.XML
 
-import org.matruss.labyrinth.harvest.Bag.Tag
+import org.matruss.labyrinth.harvest.BagOfWords.Tag
 
-class Bag(private val content:String) {
+class BagOfWords(private val content:String) {
 
   def extract:Iterable[String] = {
     def extractAsXML:Iterable[String] = {
@@ -22,11 +22,11 @@ class Bag(private val content:String) {
   }
 }
 
-object Bag {
+object BagOfWords {
   object Tag {
     // todo ? what if tag in upper case
     val Anchor = "a"
     val Link = "href"
   }
-  def apply(content:String) = new Bag(content)
+  def apply(content:String) = new BagOfWords(content)
 }

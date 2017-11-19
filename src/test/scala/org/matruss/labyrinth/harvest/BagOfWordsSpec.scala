@@ -9,18 +9,18 @@ import org.scalatest.{FreeSpec, Matchers}
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class BagSpec extends FreeSpec with Matchers {
+class BagOfWordsSpec extends FreeSpec with Matchers {
 
-  "Bag class" - {
+  "Bag of Words class" - {
     "should parse valid html" in {
       val source = Source.fromFile("src/test/resources/sample.html").getLines.toStream
-      Try { Bag( source.mkString ) } shouldBe a [Success[Bag]]
+      Try { BagOfWords( source.mkString ) } shouldBe a [Success[BagOfWords]]
     }
     "should extract links from valid XML page" in {
       val source = Source.fromFile("src/test/resources/sample.html").getLines.toStream
       Try { XML.loadString( source.mkString ) } shouldBe a [Success[String]]
 
-      val bag = Bag( source.mkString )
+      val bag = BagOfWords( source.mkString )
       bag.extract.size shouldEqual 2
     }
     "should still extract links from invalid XML page" in {
