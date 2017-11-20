@@ -31,7 +31,7 @@ class Labyrinth(cfg:LabyrinthConfiguration) {
 
   def run(startUrl:String, service:WebHarvester):ExitStatus = {
     toXML(
-      WebPage( cfg.site, buildURI(startUrl), Seq.empty[WebLink], service).toXml
+      WebPage( cfg.site, buildURI(startUrl), Set.empty[WebLink], service).toXml
     )
     service.close()
     Successful
@@ -54,7 +54,9 @@ object Labyrinth {
         Try { maze.run( p.url, maze.init ) }
         match {
           case Success(status) => lastRites(status, s"Success: application finished")
-          case Failure(ex) => lastRites(Failed, s"Failure: application failed")
+          case Failure(ex) =>
+            val x = ex
+            lastRites(Failed, s"Failure: application failed")
         }
       }
       case None => lastRites(Failed, s"Failure: arguments parsing")

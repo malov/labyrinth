@@ -16,7 +16,7 @@ import org.matruss.labyrinth.URIUtils._
   * @param urlSeenBefore  all URIs seen before reaching this page
   * @param service        handler for web service object, to fetch underlying pages
   */
-class WebPage(cfg:WebSite, base:URI, urlSeenBefore:Seq[WebLink], service:WebHarvester ) {
+class WebPage(cfg:WebSite, base:URI, urlSeenBefore:Set[WebLink], service:WebHarvester ) {
 
   private[model] val links:Iterable[WebLink] = {
     service
@@ -41,7 +41,7 @@ class WebPage(cfg:WebSite, base:URI, urlSeenBefore:Seq[WebLink], service:WebHarv
 /** Companion object */
 object WebPage{
 
-  def apply( cfg:WebSite, base:URI, urlSeenBefore:Seq[WebLink], service:WebHarvester):WebPage =
+  def apply( cfg:WebSite, base:URI, urlSeenBefore:Set[WebLink], service:WebHarvester):WebPage =
     new WebPage(cfg, base, urlSeenBefore, service)
 }
 

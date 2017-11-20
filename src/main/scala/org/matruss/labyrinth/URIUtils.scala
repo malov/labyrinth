@@ -2,6 +2,8 @@ package org.matruss.labyrinth
 
 import java.net.{URI, URL}
 
+import scala.util.{Failure, Success, Try}
+
 object URIUtils {
 
   private def addProtocol(uri:String):String = {
@@ -11,14 +13,28 @@ object URIUtils {
   }
 
   def buildURI(base:String, relative:String = ""):URI = {
-
-    if(relative.isEmpty) (new URL( addProtocol(base) )).toURI
-    else {
-      new URL( new URL( addProtocol(base) ), relative).toURI
+    Try {
+      if(relative.isEmpty) (new URL( addProtocol(base) )).toURI
+      else {
+        new URL( new URL( addProtocol(base) ), relative).toURI
+      }
+    }
+    match {
+      case Success(uri) => uri
+      case Failure(error) => (new URL( addProtocol(base) )).toURI
     }
   }
+
   def buildURI(base:URI, relative:String):URI = {
-    if(relative.isEmpty) base
-    else new URL( base.toURL, addProtocol(relative) ).toURI
+    Try {
+      if(relative.isEmpty) base
+      else {
+        new URL( base.toURL, addProtocol(relative) ).toURI
+      }
+    }
+    match {
+      case Success(uri) => uri
+      case Failure(error) => base
+    }
   }
 }
