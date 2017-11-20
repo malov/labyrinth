@@ -14,6 +14,6 @@ object ConfigNames {
     val MaxPerRoute = "total-route"
   }
   object Site {
-    val Setting = "setting"
+    val Exclude = "exclude"
   }
 }

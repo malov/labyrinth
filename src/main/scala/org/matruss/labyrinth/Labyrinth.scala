@@ -1,10 +1,10 @@
 package org.matruss.labyrinth
 
 import scala.util.{Failure, Success, Try}
+import scala.xml.Elem
 
 import com.typesafe.config.ConfigFactory
 import scopt.OptionParser
-
 import org.matruss.labyrinth.config.LabyrinthConfiguration
 import org.matruss.labyrinth.Labyrinth.LabyrinthParams
 import org.matruss.labyrinth.harvest.WebHarvester
@@ -12,21 +12,22 @@ import org.matruss.labyrinth.model.{WebLink, WebPage}
 import URIUtils._
 
 class Labyrinth(cfg:LabyrinthConfiguration) {
-
-  def init:WebHarvester = WebHarvester(cfg.httpSettings)
-
-  def run(startUrl:String, service:WebHarvester):ExitStatus = {
-    WebPage( cfg.site, buildURI(startUrl), Seq.empty[WebLink], service).toXml
-
-    service.close()
-
-    Successful
-  }
+  private def toXML(page:Elem):Elem = <main>page</main>
 
   def parser:OptionParser[LabyrinthParams] = new OptionParser[LabyrinthParams]("Labyrinth") {
     arg[String]("<URL>").minOccurs(1).maxOccurs(1).action( (x,c) =>
       c.copy(url = x)
     ).text("url to a site for mapping")
+  }
+
+  def init:WebHarvester = WebHarvester(cfg.httpSettings)
+
+  def run(startUrl:String, service:WebHarvester):ExitStatus = {
+    toXML(
+      WebPage( cfg.site, buildURI(startUrl), Seq.empty[WebLink], service).toXml
+    )
+    service.close()
+    Successful
   }
 }
 

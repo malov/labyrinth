@@ -1,12 +1,13 @@
 package org.matruss.labyrinth.config
 
+import scala.collection.JavaConverters._
 import com.typesafe.config.Config
 
-case class WebSite(setting:String)
+case class WebSite(exclude:Seq[String])
 
 object WebSite {
 
   def apply(cfg:Config):WebSite = WebSite(
-    setting = cfg.getString(ConfigNames.Site.Setting)
+    exclude = cfg.getStringList(ConfigNames.Site.Exclude).asScala
   )
 }
