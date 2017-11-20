@@ -11,6 +11,11 @@ import org.apache.http.util.EntityUtils
 import org.matruss.labyrinth.config.HTTP
 import org.matruss.labyrinth.harvest.WebHarvester.WebResponse
 
+/**
+  * Service class to fetch content of the web page based on page URI
+  *
+  * @param cfg  configuration
+  */
 class WebHarvester(cfg:HTTP) {
   private[this] val cm = {
     val res = new PoolingHttpClientConnectionManager

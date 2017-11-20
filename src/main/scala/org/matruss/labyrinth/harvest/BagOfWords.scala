@@ -5,9 +5,22 @@ import scala.util.{Failure, Success, Try}
 
 import org.matruss.labyrinth.harvest.BagOfWords.Tag
 
+/**
+  * Service class to process content of the web page and extract outgoing links
+  *
+  * @param content  raw content of the web page
+  */
 class BagOfWords(private val content:String) {
   private val anchorPattern = "<a href=(\"[^\"]*\")[^<]".r
 
+  /**
+    * Extracts links from the web page.
+    * First assumes that page is valid XML, and extracts anchor nodes and attributes
+    * However, since most of the pages are not valid XML, if first method fails, it tries extract
+    * external links based on regex pattern
+    *
+    * @return outgoing links as strings
+    */
   def extract:Iterable[String] = {
     def replace(token:String):String = token.replaceAll("\"|>|<","").trim
     def extractAsXML:Iterable[String] = {
@@ -28,7 +41,7 @@ class BagOfWords(private val content:String) {
     }
   }
 }
-
+/** Companion object */
 object BagOfWords {
   object Tag {
     // todo ? what if tag in upper case
