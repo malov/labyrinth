@@ -17,3 +17,11 @@ There are certain properties of a web site/graph, which should be taken into con
  ## Usage
  Application can be run through SBT shell, or as a standalone JAR file. It takes one parameter, starting URL:
  `java -jar <jar> <url>`
+ 
+ ## Unfinished business
+ Most annoying problem I didn't find good solution for: program builds site map iteractively, follwoing each links in a separate GET
+ request, which is slow. It potentiall be faster to follow links on each page in parallel, however, program has 
+ to take into consideration links which has been followed previously (because there are lots of pages which are pointed from multipel
+ pages on the site - all which are in the footer of the main page). In case of parallel processing, they collide, 
+ and result becoming messy and difficult to understand. Potential solution would be to build a cache of visited links, and 
+ let each page builder query this cache before following link.
