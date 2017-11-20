@@ -19,7 +19,7 @@ import URIUtils._
   */
 class Labyrinth(cfg:LabyrinthConfiguration) {
 
-  private def toXML(page:Elem):Elem = <main>page</main>
+  private def toXML(page:Elem):Elem = <main>{page}</main>
 
   def parser:OptionParser[LabyrinthParams] = new OptionParser[LabyrinthParams]("Labyrinth") {
     arg[String]("<URL>").minOccurs(1).maxOccurs(1).action( (x,c) =>
@@ -30,9 +30,10 @@ class Labyrinth(cfg:LabyrinthConfiguration) {
   def init:WebHarvester = WebHarvester(cfg.httpSettings)
 
   def run(startUrl:String, service:WebHarvester):ExitStatus = {
-    toXML(
+    val x = toXML(
       WebPage( cfg.site, buildURI(startUrl), Set.empty[WebLink], service).toXml
     )
+    x
     service.close()
     Successful
   }

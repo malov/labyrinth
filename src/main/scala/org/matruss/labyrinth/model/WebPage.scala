@@ -18,22 +18,22 @@ import org.matruss.labyrinth.URIUtils._
   */
 class WebPage(cfg:WebSite, base:URI, urlSeenBefore:Set[WebLink], service:WebHarvester ) {
 
-  private[model] val links:Iterable[WebLink] = {
+  private[model] val links:Set[WebLink] = {
     service
       .fetch(base)
       .links
       .map( WebLink(base, _ ,cfg) )
       .filterNot(_.isExternal)
-      .filterNot( urlSeenBefore.contains ) // implies comparison of WebLink objects, which are case classes
-  }
-  private[model] val pages:Iterable[WebPage] = {
-    links
+      .filterNot( l => urlSeenBefore.map(_.comboURI).contains(l.comboURI) )
       .filter(_.toFollow)
-      .map( l => WebPage(cfg, buildURI(base,l.relative), urlSeenBefore ++ links, service) )
+      .toSet
+  }
+  private[model] val pages:Set[WebPage] = {
+    links.map( l => WebPage(cfg, buildURI(base,l.relative), urlSeenBefore ++ links, service) )
   }
   def toXml:Elem =
     <page>
-      <uri>base</uri>
+      <uri>{base}</uri>
       { pages.map(_.toXml) }
     </page>
 }

@@ -15,11 +15,17 @@ import org.matruss.labyrinth.URIUtils._
   * @param cfg      configuration
   */
 case class WebLink(base:URI, relative:String, private val cfg:WebSite) {
-  private[this] val comboURI:URI = buildURI(base, relative)
+  val comboURI:URI = buildURI(base, relative)
 
   def isExternal:Boolean =
     base.getHost != comboURI.getHost
 
   def toFollow:Boolean =
     !cfg.exclude.exists( comboURI.getPath.contains )
+
+  override def equals(that: Any): Boolean = {
+    if (that.isInstanceOf[WebLink])
+      that.asInstanceOf[WebLink].comboURI == comboURI
+    else false
+  }
 }
