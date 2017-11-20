@@ -1,29 +1,37 @@
 package org.matruss.labyrinth.model
 
-import org.matruss.labyrinth.config.WebSite
-import org.matruss.labyrinth.harvest.WebHarvester
-
+import java.net.{URI, URL}
 import scala.xml.Elem
 
-class WebPage(cfg:WebSite, url:String, service:WebHarvester) {
+import org.matruss.labyrinth.config.WebSite
+import org.matruss.labyrinth.harvest.WebHarvester
+import org.matruss.labyrinth.URIUtils._
 
-  // private[this] val content
-  private[this] val links:Iterable[WebLink] = {
+class WebPage(
+  cfg:WebSite,
+  base:URI,
+  urlSeenBefore:Seq[WebLink],
+  service:WebHarvester ) {
+
+  private[model] val links:Iterable[WebLink] = {
     service
-      .fetch(url)
+      .fetch(base)
       .links
-      .map( WebLink(_,cfg) )
+      .map( WebLink(base, _ ,cfg) )
+      .filterNot(_.isExternal)
+      .filterNot( urlSeenBefore.contains ) // it implies comparison of WebLink objects, but they are case classes
   }
-  private[this] val pages:Iterable[WebPage] = {
+  private[model] val pages:Iterable[WebPage] = {
     links
       .filter(_.toFollow)
-      .map( l => WebPage(cfg, l.url, service) )
+      .map( l => WebPage(cfg, buildURI(base,l.relative), urlSeenBefore ++ links, service) )
   }
   def toXml:Elem = ???
 }
 
 object WebPage{
-  def apply(cfg:WebSite, url:String, service:WebHarvester):WebPage =
-    new WebPage(cfg, url, service)
+
+  def apply( cfg:WebSite, base:URI, urlSeenBefore:Seq[WebLink], service:WebHarvester):WebPage =
+    new WebPage(cfg, base, urlSeenBefore, service)
 }
 

@@ -1,20 +1,22 @@
 package org.matruss.labyrinth
 
 import scala.util.{Failure, Success, Try}
+
 import com.typesafe.config.ConfigFactory
 import scopt.OptionParser
+
 import org.matruss.labyrinth.config.LabyrinthConfiguration
 import org.matruss.labyrinth.Labyrinth.LabyrinthParams
 import org.matruss.labyrinth.harvest.WebHarvester
-import org.matruss.labyrinth.model.WebPage
+import org.matruss.labyrinth.model.{WebLink, WebPage}
+import URIUtils._
 
 class Labyrinth(cfg:LabyrinthConfiguration) {
 
-  // def validate:Boolean = true
   def init:WebHarvester = WebHarvester(cfg.httpSettings)
 
   def run(startUrl:String, service:WebHarvester):ExitStatus = {
-    WebPage( cfg.site, startUrl, service).toXml
+    WebPage( cfg.site, buildURI(startUrl), Seq.empty[WebLink], service).toXml
 
     service.close()
 

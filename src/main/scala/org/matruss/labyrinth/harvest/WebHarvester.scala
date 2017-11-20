@@ -21,23 +21,11 @@ class WebHarvester(cfg:HTTP) {
   private[this] lazy val client:CloseableHttpClient =
     HttpClients.custom().setConnectionManager(cm).build()
 
-  private[harvest] def createURI(base:String, relativePath:String):URI = {
-    def addProtocol(url:String):String = {
-      if(url.split("http:|https:").length > 1) url
-      else s"http://${url}"
-    }
-
-    if(relativePath.isEmpty) (new URL( addProtocol(base) )).toURI
-    else {
-      new URL( new URL( addProtocol(base) ), relativePath).toURI
-    }
-  }
-
-  def fetch(base:String, path:String = ""):WebResponse = {
+  def fetch(uri:URI):WebResponse = {
     import WebHarvester.{Encoding, GoodResponse}
 
     Try {
-      val request = new HttpGet( createURI( base, path) )
+      val request = new HttpGet( uri )
       val response = client.execute(request)
       response.getStatusLine.getStatusCode match {
         case code if code == GoodResponse => {
