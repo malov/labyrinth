@@ -1,11 +1,10 @@
 package org.matruss.labyrinth
 
 import scala.util.{Failure, Success, Try}
-import scala.xml.Elem
-
+import scala.xml.{Elem, PrettyPrinter}
 import com.typesafe.config.ConfigFactory
 import scopt.OptionParser
-
+import better.files.File
 import org.matruss.labyrinth.config.LabyrinthConfiguration
 import org.matruss.labyrinth.Labyrinth.LabyrinthParams
 import org.matruss.labyrinth.harvest.WebHarvester
@@ -21,6 +20,11 @@ class Labyrinth(cfg:LabyrinthConfiguration) {
 
   private def toXML(page:Elem):Elem = <main>{page}</main>
 
+  private def output(page:Elem):Unit = {
+    File(cfg.global.output).overwrite(
+      new PrettyPrinter(80,2).format(page)
+    )
+  }
   def parser:OptionParser[LabyrinthParams] = new OptionParser[LabyrinthParams]("Labyrinth") {
     arg[String]("<URL>").minOccurs(1).maxOccurs(1).action( (x,c) =>
       c.copy(url = x)
@@ -30,10 +34,11 @@ class Labyrinth(cfg:LabyrinthConfiguration) {
   def init:WebHarvester = WebHarvester(cfg.httpSettings)
 
   def run(startUrl:String, service:WebHarvester):ExitStatus = {
-    val x = toXML(
-      WebPage( cfg.site, buildURI(startUrl), Set.empty[WebLink], service).toXml
+    output(
+      toXML(
+        WebPage( cfg.site, buildURI(startUrl), Set.empty[WebLink], service).toXml
+      )
     )
-    x
     service.close()
     Successful
   }

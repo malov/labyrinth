@@ -2,11 +2,11 @@ package org.matruss.labyrinth.config
 
 import com.typesafe.config.Config
 
-case class Global(setting:String)
+case class Global(output:String)
 
 object Global {
 
   def apply(cfg:Config):Global = Global(
-    setting = cfg.getString(ConfigNames.Global.Setting)
+    output = cfg.getString(ConfigNames.Global.Output)
   )
 }

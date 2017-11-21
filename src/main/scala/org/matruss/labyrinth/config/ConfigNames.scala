@@ -7,7 +7,7 @@ object ConfigNames {
     val Site = "site"
   }
   object Global {
-    val Setting = "setting"
+    val Output = "output"
   }
   object HTTP {
     val MaxTotal = "total-overall"

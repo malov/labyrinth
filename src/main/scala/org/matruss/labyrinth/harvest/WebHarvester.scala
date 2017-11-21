@@ -16,7 +16,7 @@ import org.matruss.labyrinth.harvest.WebHarvester.WebResponse
   *
   * @param cfg  configuration
   */
-class WebHarvester(cfg:HTTP) {
+class WebHarvester(cfg:HTTP) extends Harvester {
   private[this] val cm = {
     val res = new PoolingHttpClientConnectionManager
     res.setMaxTotal(cfg.totalMax)
@@ -26,7 +26,7 @@ class WebHarvester(cfg:HTTP) {
   private[this] lazy val client:CloseableHttpClient =
     HttpClients.custom().setConnectionManager(cm).build()
 
-  def fetch(uri:URI):WebResponse = {
+  override def fetch(uri:URI):WebResponse = {
     import WebHarvester.{Encoding, GoodResponse}
 
     Try {
