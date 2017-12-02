@@ -3,13 +3,22 @@ package org.matruss.labyrinth.model
 import java.net.URI
 
 import scala.xml.Elem
+
 import org.matruss.labyrinth.config.WebSite
-import org.matruss.labyrinth.harvest.{Harvester, WebHarvester}
+import org.matruss.labyrinth.harvest.Harvester
 import org.matruss.labyrinth.URIUtils._
 
 /**
   * Main building block of the site, class describing web page (or graph node)
   * Has links to previously seen URI's/edges, and outgoing links/edges to other pages
+  *
+  * @todo modify for asynchronisity: since links would be followed as futures,
+  *       generrate(...) should return a set of futures, which should be eventually
+  *       flatmapped
+  * @todo add attributes (brought from WebLink class) to show in the final map
+  *       for broken or otherwise not followed links
+  * @todo add configurable parameter for depth, to break out from sites with too many
+  *       levels to follow
   *
   * @param cfg            configuration
   * @param base           URI of the page

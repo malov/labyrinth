@@ -2,9 +2,11 @@ package org.matruss.labyrinth
 
 import scala.util.{Failure, Success, Try}
 import scala.xml.{Elem, PrettyPrinter}
+
 import com.typesafe.config.ConfigFactory
 import scopt.OptionParser
 import better.files.File
+
 import org.matruss.labyrinth.config.LabyrinthConfiguration
 import org.matruss.labyrinth.Labyrinth.LabyrinthParams
 import org.matruss.labyrinth.harvest.WebHarvester
@@ -13,6 +15,11 @@ import URIUtils._
 
 /**
   * Main class for application, has all the method to initialize and run application, and generate output
+  *
+  * @todo make it finish naturally: starting call should be a long-running Future,
+  *       which should be flat-mapped, sequence-reversed, then have exit call
+  *       in Success call back handler
+  * @todo add a REST point to check running status
   *
   * @param cfg  configuration file
   */

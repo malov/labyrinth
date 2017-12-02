@@ -19,6 +19,9 @@ class BagOfWords(private val content:String) {
     * However, since most of the pages are not valid XML, if first method fails, it tries extract
     * external links based on regex pattern
     *
+    * @todo sanitize links: remove all relative links
+    * @todo mark malformed links, keep them (mark in the output as malformed)
+    *
     * @return outgoing links as strings
     */
   def extract:Iterable[String] = {

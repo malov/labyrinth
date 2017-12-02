@@ -10,6 +10,11 @@ import org.matruss.labyrinth.URIUtils._
   *  - is outgoing link is external or not
   *  - is it restricted by some other rules (defined in configuration) to be followed
   *
+  *  @todo  add attributes to the links and propogate it to the final map:
+  *         1. Link is broken
+  *         2. Link is malformed
+  *         3. Link is relative (?)
+  *
   * @param base     URI of the page this link was found on
   * @param relative link to the outgoing page
   * @param cfg      configuration

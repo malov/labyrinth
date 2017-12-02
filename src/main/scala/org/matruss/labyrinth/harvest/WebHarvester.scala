@@ -14,6 +14,8 @@ import org.matruss.labyrinth.harvest.WebHarvester.WebResponse
 /**
   * Service class to fetch content of the web page based on page URI
   *
+  * @todo handle broken links: mark them to be on the final map, but don't follow
+  *
   * @param cfg  configuration
   */
 class WebHarvester(cfg:HTTP) extends Harvester {
