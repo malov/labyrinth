@@ -4,6 +4,7 @@ import java.net.URI
 
 import org.matruss.labyrinth.harvest.WebHarvester.WebResponse
 
+import scala.concurrent.Future
 import scala.io.Source
 
 /**
@@ -11,7 +12,7 @@ import scala.io.Source
   * extended by web harvester and test substitute
   */
 trait Harvester {
-  def fetch(uri:URI):WebResponse
+  def fetch(uri:URI):Future[WebResponse]
 }
 
 object Harvester {

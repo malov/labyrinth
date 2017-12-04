@@ -2,12 +2,11 @@ package org.matruss.labyrinth.harvest
 
 import java.net.URI
 
-import scala.concurrent.Future
-
-import play.api.libs.ws.ahc.{StandaloneAhcWSClient, StandaloneAhcWSRequest, StandaloneAhcWSResponse}
+import scala.concurrent.{ExecutionContext, Future}
+import play.api.libs.ws.ahc.StandaloneAhcWSClient
 import org.matruss.labyrinth.harvest.WebHarvester.WebResponse
 
-class AsyncWebHarvester(wsClient:StandaloneAhcWSClient) extends Harvester {
+class AsyncWebHarvester(wsClient:StandaloneAhcWSClient)(implicit ec:ExecutionContext) extends Harvester {
 
   def fetch(uri:URI):Future[WebResponse] = {
     import Harvester.GoodResponse
@@ -18,7 +17,7 @@ class AsyncWebHarvester(wsClient:StandaloneAhcWSClient) extends Harvester {
       .map { resp =>
         if(resp.status == GoodResponse)
           WebResponse(
-            BagOfWords( resp.body[String] ).extract,
+            BagOfWords( resp.body ).extract,
             resp.status,
             resp.statusText
           )

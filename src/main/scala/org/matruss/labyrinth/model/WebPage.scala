@@ -3,10 +3,13 @@ package org.matruss.labyrinth.model
 import java.net.URI
 
 import scala.xml.Elem
-
+import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.duration._
 import org.matruss.labyrinth.config.WebSite
 import org.matruss.labyrinth.harvest.Harvester
 import org.matruss.labyrinth.URIUtils._
+import org.matruss.labyrinth.harvest.WebHarvester.WebResponse
+
 
 /**
   * Main building block of the site, class describing web page (or graph node)
@@ -25,11 +28,12 @@ import org.matruss.labyrinth.URIUtils._
   * @param urlSeenBefore  all URIs seen before reaching this page
   * @param service        handler for web service object, to fetch underlying pages
   */
-class WebPage(cfg:WebSite, base:URI, urlSeenBefore:Set[WebLink], service:Harvester ) {
+class WebPage(cfg:WebSite, base:URI, urlSeenBefore:Set[WebLink], service:Harvester )(implicit ec:ExecutionContext) {
 
   private[model] val links:Set[WebLink] = {
-    service
-      .fetch(base)
+    // blocking because we need all links materialized before proceeding
+    val content = Await.result(service.fetch(base), 1 second)
+    content
       .links
       .map( WebLink(base, _ ,cfg) )
       .filterNot(_.isExternal)
@@ -37,20 +41,22 @@ class WebPage(cfg:WebSite, base:URI, urlSeenBefore:Set[WebLink], service:Harvest
       .filter(_.toFollow)
       .toSet
   }
-  private[model] def generate:Set[WebPage] = {
-    links.map( l => WebPage(cfg, buildURI(base,l.relative), urlSeenBefore ++ links, service) )
+
+  private[model] def generate:Set[Future[WebPage]] = {
+    links.map(l => Future( WebPage(cfg, buildURI(base,l.relative), urlSeenBefore ++ links, service) ) )
   }
+
   def toXml:Elem =
     <page>
       <uri>{base}</uri>
-      { generate.map(_.toXml) }
+      { Future.traverse(generate)( _.map(_.toXml) ) }
     </page>
 }
 
 /** Companion object */
 object WebPage{
 
-  def apply( cfg:WebSite, base:URI, urlSeenBefore:Set[WebLink], service:Harvester):WebPage =
+  def apply( cfg:WebSite, base:URI, urlSeenBefore:Set[WebLink], service:Harvester)(implicit ec:ExecutionContext):WebPage =
     new WebPage(cfg, base, urlSeenBefore, service)
 }
 
