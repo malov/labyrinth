@@ -14,6 +14,11 @@ trait Harvester {
   def fetch(uri:URI):WebResponse
 }
 
+object Harvester {
+  val GoodResponse = 200
+  val Encoding = "UTF-8"
+}
+
 class TestHarvester extends Harvester {
 
   /**

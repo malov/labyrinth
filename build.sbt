@@ -11,6 +11,8 @@ libraryDependencies ++= Seq(
   "org.apache.httpcomponents" % "httpclient" % "4.5.3",
   "org.scala-lang.modules" %% "scala-xml" % "1.0.6",
   "com.github.pathikrit" %% "better-files" % "3.2.0",
+  "com.typesafe.play" %% "play-ahc-ws-standalone" % "1.1.3",
+  "com.typesafe.play" %% "play-ws-standalone-xml" % "1.1.3",
   "org.scalatest" %% "scalatest" % "3.0.4" % Test,
   "junit" % "junit" % "4.11" % Test
 )

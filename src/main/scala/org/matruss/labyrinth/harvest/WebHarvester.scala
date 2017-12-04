@@ -29,7 +29,7 @@ class WebHarvester(cfg:HTTP) extends Harvester {
     HttpClients.custom().setConnectionManager(cm).build()
 
   override def fetch(uri:URI):WebResponse = {
-    import WebHarvester.{Encoding, GoodResponse}
+    import Harvester.{Encoding, GoodResponse}
 
     Try {
       val request = new HttpGet( uri )
@@ -57,9 +57,6 @@ class WebHarvester(cfg:HTTP) extends Harvester {
 
 object WebHarvester {
   case class WebResponse(links:Iterable[String], responseCode:Int, responseMessage:String)
-
-  private val GoodResponse = 200
-  private val Encoding = "UTF-8"
 
   def apply(cfg:HTTP):WebHarvester = new WebHarvester(cfg)
 }
