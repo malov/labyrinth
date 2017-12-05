@@ -8,7 +8,7 @@ import org.junit.runner.RunWith
 import org.scalatest.{FreeSpec, Matchers}
 import org.scalatest.junit.JUnitRunner
 import org.matruss.labyrinth.config.LabyrinthConfiguration
-import org.matruss.labyrinth.harvest.TestHarvester
+/*import org.matruss.labyrinth.harvest.TestHarvester
 
 @RunWith(classOf[JUnitRunner])
 class WebPageSpec extends FreeSpec with Matchers {
@@ -30,3 +30,4 @@ class WebPageSpec extends FreeSpec with Matchers {
     "should build correct XML" in {}
   }
 }
+*/

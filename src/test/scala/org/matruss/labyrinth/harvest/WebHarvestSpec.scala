@@ -7,7 +7,7 @@ import org.scalatest.junit.JUnitRunner
 
 import org.matruss.labyrinth.URIUtils._
 import org.matruss.labyrinth.config.LabyrinthConfiguration
-
+/*
 @RunWith(classOf[JUnitRunner])
 class WebHarvestSpec extends FreeSpec with Matchers {
   private val conf = LabyrinthConfiguration( ConfigFactory.load("application.test.conf") )
@@ -19,4 +19,4 @@ class WebHarvestSpec extends FreeSpec with Matchers {
       response.responseCode shouldEqual 200
     }
   }
-}
+}*/

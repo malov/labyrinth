@@ -18,7 +18,7 @@ import org.matruss.labyrinth.harvest.WebHarvester.WebResponse
   *
   * @param cfg  configuration
   */
-class WebHarvester(cfg:HTTP) extends Harvester {
+/*class WebHarvester(cfg:HTTP) extends Harvester {
   private[this] val cm = {
     val res = new PoolingHttpClientConnectionManager
     res.setMaxTotal(cfg.totalMax)
@@ -54,9 +54,9 @@ class WebHarvester(cfg:HTTP) extends Harvester {
 
   def close():Unit = client.close()
 }
-
+*/
 object WebHarvester {
   case class WebResponse(links:Iterable[String], responseCode:Int, responseMessage:String)
 
-  def apply(cfg:HTTP):WebHarvester = new WebHarvester(cfg)
+  //def apply(cfg:HTTP):WebHarvester = new WebHarvester(cfg)
 }

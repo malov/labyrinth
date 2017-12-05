@@ -20,7 +20,7 @@ object Harvester {
   val Encoding = "UTF-8"
 }
 
-class TestHarvester extends Harvester {
+/*class TestHarvester extends Harvester {
 
   /**
     * Test implementation of link content fetch,
@@ -33,4 +33,4 @@ class TestHarvester extends Harvester {
     val content = Source.fromFile(uri.getPath).getLines.toList.mkString
     WebResponse( BagOfWords (content).extract, 200, "" )
   }
-}
+}*/

@@ -46,11 +46,13 @@ class WebPage(cfg:WebSite, base:URI, urlSeenBefore:Set[WebLink], service:Harvest
     links.map(l => Future( WebPage(cfg, buildURI(base,l.relative), urlSeenBefore ++ links, service) ) )
   }
 
-  def toXml:Elem =
-    <page>
-      <uri>{base}</uri>
-      { Future.traverse(generate)( _.map(_.toXml) ) }
-    </page>
+  def toXml:Future[Elem] =
+    Future {
+      <page>
+        <uri>{base}</uri>
+        { Future.traverse(generate)(ws => ws.map(_.toXml) ) }
+      </page>
+    }
 }
 
 /** Companion object */

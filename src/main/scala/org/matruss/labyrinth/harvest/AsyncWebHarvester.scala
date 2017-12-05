@@ -26,3 +26,7 @@ class AsyncWebHarvester(wsClient:StandaloneAhcWSClient)(implicit ec:ExecutionCon
       }
   }
 }
+
+object AsyncWebHarvester {
+  def apply(wsClient:StandaloneAhcWSClient)(implicit ec:ExecutionContext) = new AsyncWebHarvester(wsClient)
+}
